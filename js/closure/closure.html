@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <h2>1</h2>
+  <h2>2</h2>
+  <h2>3</h2>
+  <h2>4</h2>
+  <h2>5</h2>
+
+  <div>1</div>
+  <div>2</div>
+  <div>3</div>
+  <div>4</div>
+  <div>5</div>
+</body>
+<script>
+    // 利用闭包给每个div添加一个独特的点击事件
+    var h2s = document.getElementsByTagName("h2");
+    for (var i = 0; i < h2s.length; i++) {
+      h2s[i].onclick = function () {
+        console.log(i); // 给节点添加onclick事件是异步操作,事件被触发的时候for 循环已经结束， 变量i的值已经变成了5
+      }
+    }
+
+  // 利用闭包给每个div添加一个独特的点击事件
+  var divs = document.getElementsByTagName("div");
+  for (var i = 0; i < divs.length; i++) {
+    (function (i) { // 利用匿名函数封装一层函数作用域以参数形式传递形成一层引用关系维护这个局部变量
+      divs[i].onclick = function () {
+        console.log(i);
+      }
+    })(i)
+  }
+</script>
+</html>
