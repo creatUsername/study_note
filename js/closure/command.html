@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <button id="execute">Exec</button>
+    <button id="undo">Undo</button>
+  </body>
+  <script>
+    // 用闭包实现命令模式
+    // 命令模式的意图是 把请求封装为对象
+    // 分离出 请求 发起者 和 接收者(执行者) 之间的耦合关系
+    // 在命令执行之前可以预先在命令对象中植入命令的接收者
+
+    // 执行命令的接收者
+    var TV = {
+      open: function () {
+        console.log("打开电视机");
+      },
+      close: function () {
+        console.log("关闭电视机");
+      },
+    };
+    // 命令对象
+    var toggleCommand = function (receiver) {
+      this.receiver = receiver;
+    };
+    toggleCommand.prototype.execute = function () {
+      this.receiver.open();
+    };
+    toggleCommand.prototype.undo = function () {
+      this.receiver.close();
+    };
+    var setCommand = function (command) {
+      document.getElementById("execute").onclick = function () {
+        command.execute();
+      };
+      document.getElementById("undo").onclick = function () {
+        command.undo();
+      };
+    };
+    // setCommand(new toggleCommand(TV));
+    // JS中函数作为一等对象,用函数的形式更自然
+    var createCommand = function (receiver) {
+      // var execute = receiver.open; // 为什么这样子不行? 因为没有达到闭包形成的条件(内部函数访问外部函数的作用域)
+
+      var execute = function () { // 这种有坏处! 函数每次被执行都会创建一个对象,以及对象两个方法的创建, 还是推荐构造函数放在原型链上
+        return receiver.open();
+      };
+      var undo = function () {
+        return receiver.close();
+      };
+      return {
+        execute,
+        undo,
+      };
+    };
+    setCommand(createCommand(TV));
+  </script>
+</html>

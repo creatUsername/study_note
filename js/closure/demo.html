@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // function fun() {
+    //   let arr = []
+    //   return function () {
+    //     debugger; // Closure { arr }
+    //     console.log(arr)
+    //   }
+    // }
+
+    function fun() {
+      // fun.AO = { arr } fun.Closure = {}
+      let arr = [], other = 1;
+      debugger;
+      function func1() {
+        // 预编译到这里将 arr 加入了 fun.Closure
+        console.log(arr);
+      }
+      return function () {
+        debugger; // Closure { arr }
+      }
+    }
+
+    window.f = fun(); // 长久持有了fun的引用导致无法回收
+    window.f();
+
+    function fun1() {
+      let arr = Array(100000);
+      debugger
+      function fun2() {
+        debugger
+        console.log(arr)
+      }
+      fun2();
+      window.obj = { // 长久持有了 window.obj.method 的引用
+        method() { // Closure { arr }
+          debugger
+        }
+      }
+      debugger
+    }
+    fun1();
+    window.obj.method();
+
+    // 将变量加入到 Closure 并不是简单的 Closure.arr = arr 的过程，这是一个引用传递
+  </script>
+</body>
+</html>
