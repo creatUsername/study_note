@@ -18,3 +18,27 @@ var throttle = function (fn, delay, option) {
     }, delay || 500);
   }
 }
+
+// var throttle = function (fn, delay) {
+//   var last = 0;
+//   return function () {
+//     var curr = +new Date();
+//     if (curr - last > delay) {
+//       fn.apply(this, arguments);
+//       last = curr;
+//     }
+//   }
+// }
+
+var debounce = function (fn, delay) {
+  var timer = null;
+  return function () {
+    var context = this, args = arguments;
+    if (timer) {
+      clearTimeout(timer);
+    }
+    timer = setTimeout(() => {
+      fn.apply(context, args);
+    }, delay);
+  }
+}
