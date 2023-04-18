@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <button id="loginBtn">Login</button>
+    <div id="div1">BIND</div>
+  </body>
+  <script>
+    var CreateModal = function () {
+      return this.init();
+    };
+
+    CreateModal.prototype.init = function () {
+      let div = document.createElement("div");
+      div.innerHTML = "Login";
+      document.body.appendChild(div);
+      this.dom = div;
+      return this;
+    };
+
+    CreateModal.prototype.show = function () {
+      this.dom.style.display = "block";
+      return this;
+    };
+
+    CreateModal.prototype.hide = function () {
+      this.dom.style.display = "none";
+      return this;
+    };
+    // 通用的单例模式
+    var getSingle = function (fn) {
+      var instance;
+      return function () {
+        return instance || (instance = fn.apply(this, arguments));
+      };
+    };
+
+    // var createSingleLoginModal = (function () {
+    //   var instance = null;
+    //   return function () {
+    //     if (instance) {
+    //       return instance;
+    //     }
+    //     return instance = new CreateModal();
+    //   }
+    // })();
+
+    var createLogin = function () {
+      return new CreateModal();
+    };
+
+    var createSingleLoginModal = getSingle(createLogin);
+
+    let loginBtn = document.querySelector("#loginBtn");
+    loginBtn.onclick = function () {
+      createSingleLoginModal().show();
+    };
+
+    var bindEvent = getSingle(function (x) {
+      let div1 = document.getElementById("div1");
+      div1.addEventListener("click", function () {
+        alert(`bind!${x}`);
+      })
+      return div1;
+    });
+    var render = function (n) {
+      console.log("render");
+      bindEvent(n);
+    }
+    render(1);
+    render(2);
+    render(3);
+    render(4);
+  </script>
+</html>
